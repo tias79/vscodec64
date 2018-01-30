@@ -1,0 +1,45 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "identifier": "asm",
+            "label": "KickAss",
+            "type": "shell",
+            "windows": {
+                "command": "java -jar c:\\C64\\Tools\\KickAssembler\\KickAss.jar -log kickass.log -o ${fileBasenameNoExtension}.prg -vicesymbols -showmem ${file}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Vice",
+            "type": "shell",
+            "windows": {
+                "command": "x64.exe -moncommands ${fileBasenameNoExtension}.vs +confirmexit ${fileBasenameNoExtension}.prg"
+            },
+            "dependsOn": "asm",
+            "problemMatcher": []
+        },
+        {
+            "label": "Vice debug",
+            "type": "shell",
+            "windows": {
+                "command": "x64.exe -moncommands ${fileBasenameNoExtension}.mon +confirmexit ${fileBasenameNoExtension}.prg"
+            },
+            "dependsOn": "mon",
+            "problemMatcher": []
+        },
+        {
+            "identifier": "mon",
+            "label": "Compose Vice Monitor commands",
+            "type": "shell",
+            "windows": {
+                "command": "cat ${fileBasenameNoExtension}.vs, breakpoints.txt | sc ${fileBasenameNoExtension}.mon"
+            },
+            "dependsOn": "asm"
+        }
+    ]
+}
